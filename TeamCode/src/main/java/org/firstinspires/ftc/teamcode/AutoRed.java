@@ -29,6 +29,7 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -50,8 +51,8 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Basic: Linear OpMode", group="Linear Opmode")
-public class OlafDrive extends LinearOpMode {
+@Autonomous(name="Basic: Linear OpMode", group="Linear Opmode")
+public class AutoRed extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
@@ -90,58 +91,14 @@ public class OlafDrive extends LinearOpMode {
         while (opModeIsActive()) {
 
             // Setup a variable for each drive wheel to save power level for telemetry
-            double leftPower;
-            double rightPower;
-            double mPower;
-            double outPower;
-            double upPower;
-            double grabPower;
+            double leftPower = 0;
+            double rightPower = 0;
+            double mPower = 0;
+            double outPower = 0;
+            double upPower = 0;
+            double grabPower = 0;
 
-            //move out at the beginning of the teleop
-            if(runtime.milliseconds()< 1500){
-                outPower = 1;
-            }
-            else{
-                outPower = 0;
-            }
 
-            //classic arcade drive
-            float xvalue = gamepad1.left_stick_x;
-            float yvalue = gamepad1.left_stick_y;
-            leftPower = yvalue + xvalue;
-            rightPower = yvalue - xvalue;
-
-            //clip range
-            leftPower = Range.clip(leftPower, -1, 1);
-            rightPower = Range.clip(rightPower, -1, 1);
-
-            //strafing wheel
-            mPower = gamepad1.right_stick_x;
-            mPower = Range.clip(mPower, -1, 1);
-
-            //up and down
-            if(gamepad2.y){
-                upPower = 1;
-            }
-            else if(gamepad1.a){
-                upPower = -1;
-            }
-            else{
-                upPower = 0;
-            }
-
-            //grabber mechanism
-            if(gamepad2.left_bumper){
-                grabPower = 1;
-            }
-            else if(gamepad2.right_bumper){
-                grabPower = -1;
-            }
-            else{
-                grabPower = 0;
-            }
-
-            //set power for everything
             lDrive.setPower(leftPower);
             rDrive.setPower(rightPower);
             mDrive.setPower(mPower);
