@@ -29,7 +29,6 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -49,19 +48,18 @@ import com.qualcomm.robotcore.util.Range;
  * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
-@Disabled
-@TeleOp(name="Basic: Linear OpMode", group="Linear Opmode")
-public class OlafDrive extends LinearOpMode {
+
+@TeleOp(name="Arcade", group="Linear Opmode")
+public class aDrive extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor lDrive;
     private DcMotor rDrive;
-    private DcMotor mDrive;
     private DcMotor out;
-    private DcMotor up1;
-    private DcMotor up2;
-    private DcMotor grab;
+    private DcMotor up;
+    private DcMotor grab1;
+    private DcMotor grab2;
 
 
     @Override
@@ -72,15 +70,15 @@ public class OlafDrive extends LinearOpMode {
         //names from hardware map
         lDrive  = hardwareMap.get(DcMotor.class, "l");
         rDrive = hardwareMap.get(DcMotor.class, "r");
-        mDrive = hardwareMap.get(DcMotor.class, "m");
         out = hardwareMap.get(DcMotor.class, "o");
-        up1  = hardwareMap.get(DcMotor.class, "u1");
-        up2 = hardwareMap.get(DcMotor.class, "u2");
-        grab = hardwareMap.get(DcMotor.class, "g");
+        up  = hardwareMap.get(DcMotor.class, "u1");
+        grab1 = hardwareMap.get(DcMotor.class, "g1");
+        grab2 = hardwareMap.get(DcMotor.class, "g2");
 
-        //how to reverse if needed
+        /*how to reverse if needed
         lDrive.setDirection(DcMotor.Direction.FORWARD);
         rDrive.setDirection(DcMotor.Direction.REVERSE);
+        */
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -92,19 +90,9 @@ public class OlafDrive extends LinearOpMode {
             // Setup a variable for each drive wheel to save power level for telemetry
             double leftPower;
             double rightPower;
-            double mPower;
             double outPower;
             double upPower;
             double grabPower;
-
-            //move out at the beginning of the teleop
-            if(runtime.milliseconds()< 1500){
-                outPower = 1;
-            }
-            else{
-                outPower = 0;
-            }
-
 
             //classic arcade drive
             float xvalue = gamepad1.left_stick_x;
@@ -112,19 +100,28 @@ public class OlafDrive extends LinearOpMode {
             leftPower = yvalue + xvalue;
             rightPower = yvalue - xvalue;
 
+
             //clip range
             leftPower = Range.clip(leftPower, -1, 1);
             rightPower = Range.clip(rightPower, -1, 1);
 
-            //strafing wheel
-            mPower = gamepad1.right_stick_x;
-            mPower = Range.clip(mPower, -1, 1);
+            //out move
+            if(gamepad1.y){
+                outPower = 1;
+            }
+            else if(gamepad1.a){
+                outPower = -1;
+            }
+            else{
+                outPower = 0;
+            }
+
 
             //up and down
             if(gamepad2.y){
                 upPower = 1;
             }
-            else if(gamepad1.a){
+            else if(gamepad2.a){
                 upPower = -1;
             }
             else{
@@ -142,19 +139,25 @@ public class OlafDrive extends LinearOpMode {
                 grabPower = 0;
             }
 
+            if(gamepad1.right_trigger > 0.1){
+                leftPower = .5*leftPower;
+                rightPower = .5*rightPower;
+            }
+
             //set power for everything
             lDrive.setPower(leftPower);
             rDrive.setPower(rightPower);
-            mDrive.setPower(mPower);
             out.setPower(outPower);
-            up1.setPower(upPower);
-            up2.setPower(upPower);
-            grab.setPower(grabPower);
+            up.setPower(upPower);
+            grab1.setPower(grabPower);
+            grab2.setPower(-grabPower);
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
+            telemetry.addData("Motors", "left (%.2f), right (%.2f), up (%.2f), grab(%.2f)", leftPower, rightPower, upPower, grabPower);
             telemetry.update();
         }
     }
+
+
 }
