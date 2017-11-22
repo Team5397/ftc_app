@@ -109,6 +109,11 @@ public class NewDrive extends LinearOpMode {
             leftPower = yvalue + xvalue;
             rightPower = yvalue - xvalue;
 
+            /*tank drive
+            leftPower = gamepad1.left_stick_y;
+            leftPower = gamepad1.right_stick_y;
+            */
+
             //clip range
             leftPower = Range.clip(leftPower, -1, 1);
             rightPower = Range.clip(rightPower, -1, 1);
@@ -147,7 +152,7 @@ public class NewDrive extends LinearOpMode {
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
+            telemetry.addData("Motors", "left (%.2f), right (%.2f), up (%.2f), grab(%.2f)", leftPower, rightPower, upPower, grabPower);
             telemetry.update();
         }
     }
