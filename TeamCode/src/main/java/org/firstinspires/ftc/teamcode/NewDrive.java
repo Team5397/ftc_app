@@ -118,7 +118,7 @@ public class NewDrive extends LinearOpMode {
             if(gamepad2.y){
                 upPower = 1;
             }
-            else if(gamepad1.a){
+            else if(gamepad2.a){
                 upPower = -1;
             }
             else{
